@@ -41,8 +41,11 @@ console.log(`  peetprint ${expected.peetprint}`)
 console.log(`  akamai    ${expected.akamai}`)
 
 ;(async () => {
-	// Register the profile from the captured JSON.
-	profiles.registerFromPeet('parrot-fixture', fixture)
+	// Register the profile from the captured JSON. The profile is TLS-fingerprint-only
+	// (extensionOrder, ciphers, GREASE positions, H/2 settings, etc.) — it does NOT inject
+	// HTTP request headers automatically. Callers pull the captured header order off the
+	// profile object and pass it as opts.headers so their HTTP layer matches Chrome too.
+	const profile = profiles.registerFromPeet('parrot-fixture', fixture)
 
 	// Force a fresh connection AND clear the session cache so a stale PSK doesn't add a
 	// pre_shared_key extension that bumps the JA4 extension count.
@@ -53,6 +56,9 @@ console.log(`  akamai    ${expected.akamai}`)
 		url: 'https://tls.peet.ws/api/all',
 		json: true,
 		profile: 'parrot-fixture',
+		// Explicit header block from the parrot capture. The builder now emits caller headers
+		// verbatim; nothing else gets injected. This is how you get full Chrome HTTP mimicry.
+		headers: profile.headers ? { ...profile.headers } : undefined,
 		forever: false,
 		resolveWithFullResponse: true,
 		timeouts: { tlsHandshake: 15_000, response: 15_000 },
