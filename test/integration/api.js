@@ -15,10 +15,9 @@ const log = (label, ok, detail) => {
 		const data = await request({
 			url: 'https://tls.peet.ws/api/all',
 			json: true,
-			gzip: true,
 			resolveWithFullResponse: true,
 		})
-		log('promise+json+gzip+full-response',
+		log('promise+json+full-response',
 			data.status === 200 && data.body?.tls?.ja4?.startsWith('t13d1516h2_8daaf6152771_'),
 			`status=${data.status} ja4=${data.body?.tls?.ja4}`)
 	} catch (e) { log('promise+json+gzip+full-response', false, e.message) }

@@ -15,7 +15,6 @@ const profiles = require('../../lib/profiles')
 	const baseline = await request({
 		url: 'https://tls.peet.ws/api/all',
 		json: true,
-		gzip: true,
 		resolveWithFullResponse: true,
 	})
 	const expected = {
@@ -39,7 +38,6 @@ const profiles = require('../../lib/profiles')
 	const after = await request({
 		url: 'https://tls.peet.ws/api/all',
 		json: true,
-		gzip: true,
 		profile: 'peet-parrot',
 		forever: false,
 		resolveWithFullResponse: true,

@@ -52,7 +52,6 @@ console.log(`  akamai    ${expected.akamai}`)
 	const res = await request({
 		url: 'https://tls.peet.ws/api/all',
 		json: true,
-		gzip: true,
 		profile: 'parrot-fixture',
 		forever: false,
 		resolveWithFullResponse: true,

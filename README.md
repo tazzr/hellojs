@@ -137,7 +137,7 @@ await request({
 | `form` | object | — | `application/x-www-form-urlencoded` body |
 | `qs` | object | — | querystring appended to url |
 | `jar` | `request.jar()` | — | cookie persistence across requests |
-| `gzip` | bool | `false` | auto-decompress gzip/br/deflate/zstd response bodies |
+| `gzip` | bool | — | accepted for request.js compatibility; **no-op**. Response bodies are auto-decompressed based on the response's `Content-Encoding` header. To receive raw compressed bytes, override `Accept-Encoding: identity` in `headers`. |
 | `followRedirect` | bool | `true` | up to `maxRedirects` |
 | `maxRedirects` | number | `10` | |
 | `timeout` | ms | — | aborts request after N ms (legacy single-phase timer; applies to the response phase) |
