@@ -140,8 +140,8 @@ await request({
 | `gzip` | bool | — | accepted for request.js compatibility; **no-op**. Response bodies are auto-decompressed based on the response's `Content-Encoding` header. To receive raw compressed bytes, override `Accept-Encoding: identity` in `headers`. |
 | `followRedirect` | bool | `true` | up to `maxRedirects` |
 | `maxRedirects` | number | `10` | |
-| `timeout` | ms | — | aborts request after N ms (legacy single-phase timer; applies to the response phase) |
-| `timeouts` | object | — | per-phase timeouts: `{ connect, tlsHandshake, response, idle }`, all in ms. Overrides `timeout` for the response phase. |
+| `timeout` | ms | — | aborts request after N ms (legacy single-phase timer; applies to the response phase). Overrides the 60s response default. |
+| `timeouts` | object | — | per-phase timeouts: `{ connect, tlsHandshake, response, idle }`, all in ms. Response phase defaults to **60_000ms** (60s) when neither `timeouts.response` nor `timeout` is set; pass `timeouts: { response: 0 }` to disable. Overrides `timeout` for the response phase. |
 | `proxy` | URL string | — | HTTP CONNECT proxy: `http://user:pass@host:port` |
 | `forever` | bool | `true` | reuse pooled TLS connections; `false` forces fresh handshake |
 | `simple` | bool | `true` | reject 4xx/5xx as errors (set `false` to resolve them as responses) |
@@ -276,6 +276,10 @@ await request({
 ```
 
 If only the legacy `timeout` option is set, it applies to the response phase.
+
+**Response-phase default: 60s.** If you don't pass `timeouts.response` OR `timeout`, requests
+still die after 60 seconds so a bad server can't hang a process indefinitely. To opt out
+explicitly (long-poll, SSE, download of unknown duration), pass `timeouts: { response: 0 }`.
 
 ### Streaming response bodies
 
